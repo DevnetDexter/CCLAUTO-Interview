@@ -1,0 +1,8 @@
+---
+
+- name: Network Calculator
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  roles:
+    - api_call

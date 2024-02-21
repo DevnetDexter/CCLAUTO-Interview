@@ -1,0 +1,4 @@
+---
+vars:
+  subnet: " "
+  mask: " "
