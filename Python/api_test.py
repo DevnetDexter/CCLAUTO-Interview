@@ -1,19 +1,18 @@
 import argparse
 import requests
-import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument("mask")
 args = parser.parse_args()
 api = "https://networkcalc.com/api/ip"
-class_A = "10.0.0.0"
-class_B = "172.16.0.0"
-class_C = "192.168.1.0"
+subnet = "172.16.0.0"
 mask = args.mask
 
 def api_call():
-    data = requests.get(url).json()
-    global hosts, first_ip, subnet_mask, subnet_bits
+    url = f"{api}/{subnet}/{mask}"
+    response = requests.get(url, timeout=15)
+    response.raise_for_status()
+    return response.json()["address"]
 
 def assignable_hosts(hosts, cidr):
     print("There are",hosts,"assignable hosts for the",cidr,"subnet")
@@ -30,8 +29,8 @@ def mask_cidr(subnet_bits):
     print("The subnet mask in cidr notation is", mask_cidr)
 
 if __name__ == '__main__':
-    api_call()
-    assignable_hosts(hosts, cidr)
-    first_host(first_ip)
-    mask_decimal(subnet_mask)
-    mask_cidr(subnet_bits)
+    address = api_call()
+    assignable_hosts(address["assignable_hosts"], address["cidr_notation"])
+    first_host(address["first_assignable_host"])
+    mask_decimal(address["subnet_mask"])
+    mask_cidr(address["subnet_bits"])
